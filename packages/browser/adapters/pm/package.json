@@ -1,0 +1,4 @@
+{
+  "main": "dist/trpc-browser-adapters-pm.cjs.js",
+  "module": "dist/trpc-browser-adapters-pm.esm.js"
+}

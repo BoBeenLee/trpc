@@ -1,0 +1,4 @@
+{
+  "main": "dist/trpc-browser-rpc.cjs.js",
+  "module": "dist/trpc-browser-rpc.esm.js"
+}
