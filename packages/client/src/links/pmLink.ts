@@ -101,7 +101,7 @@ export function createPMClient(opts: PostMessageClientOptions) {
 
     // open, error 구분 방법
     const handleIncomingRequest = (req: TRPCClientIncomingRequest) => {
-      const method = req.method as 'open' | 'error' | 'reconnect';
+      const method = req.method as 'open' | 'close' | 'error';
       if (method === 'open' && conn === activeConnection) {
         state = 'open';
         dispatch();
@@ -109,6 +109,10 @@ export function createPMClient(opts: PostMessageClientOptions) {
       }
       if (method === 'error' && conn === activeConnection) {
         // TODO ERROR
+        return;
+      }
+      if (method === 'close' && conn === activeConnection) {
+        handleIncomingCloseRequest();
         return;
       }
     };
@@ -149,7 +153,7 @@ export function createPMClient(opts: PostMessageClientOptions) {
       }
     });
 
-    conn.addEventListener('close', () => {
+    const handleIncomingCloseRequest = () => {
       for (const key in pendingRequests) {
         const req = pendingRequests[key];
         if (req.pm !== conn) {
@@ -165,7 +169,7 @@ export function createPMClient(opts: PostMessageClientOptions) {
           req.callbacks.onDone?.();
         }
       }
-    });
+    };
     return conn;
   }
 
