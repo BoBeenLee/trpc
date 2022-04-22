@@ -94,13 +94,6 @@ export function createPMClient(opts: PostMessageClientOptions) {
     }
   }
 
-  function resumeSubscriptionOnReconnect(req: TRequest) {
-    if (outgoing.some((r) => r.id === req.op.id)) {
-      return;
-    }
-    request(req.op, req.callbacks);
-  }
-
   function createPM() {
     const conn = PostMessageImpl;
     clearTimeout(connectTimer as any);
@@ -170,9 +163,6 @@ export function createPMClient(opts: PostMessageClientOptions) {
         if (req.type !== 'subscription') {
           delete pendingRequests[key];
           req.callbacks.onDone?.();
-        } else if (state !== 'closed') {
-          // request restart of sub with next connection
-          resumeSubscriptionOnReconnect(req);
         }
       }
     });
@@ -253,12 +243,12 @@ export function pmLink<TRouter extends AnyRouter>(
   opts: PostMessageLinkOptions,
 ): TRPCLink<TRouter> {
   // initialized config
-  return (rt) => {
+  return (runtime) => {
     const { client } = opts;
 
     return ({ op, prev, onDestroy }) => {
       const { type, input: rawInput, path, id } = op;
-      const input = rt.transformer.serialize(rawInput);
+      const input = runtime.transformer.serialize(rawInput);
       let isDone = false;
       const unsub = client.request(
         { type, path, input, id },
@@ -268,7 +258,7 @@ export function pmLink<TRouter extends AnyRouter>(
               return;
             }
             if ('data' in result) {
-              const data = rt.transformer.deserialize(result.data);
+              const data = runtime.transformer.deserialize(result.data);
               prev({ type: 'data', data });
             } else {
               prev(result);
@@ -289,7 +279,7 @@ export function pmLink<TRouter extends AnyRouter>(
                 ? err
                 : TRPCClientError.from({
                     ...err,
-                    error: rt.transformer.deserialize(err.error),
+                    error: runtime.transformer.deserialize(err.error),
                   }),
             );
           },
