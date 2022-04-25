@@ -1,12 +1,20 @@
-import { TRPCError } from '../TRPCError';
-import { BaseHandlerOptions } from '../internals/BaseHandlerOptions';
+import {
+  AnyRouter,
+  CombinedDataTransformer,
+  ProcedureType,
+  Subscription,
+  TRPCError,
+  inferRouterContext,
+} from '@trpc/server';
+import type {
+  TRPCErrorResponse,
+  TRPCRequest,
+  TRPCResponse,
+} from '@trpc/server/rpc';
+import type { BaseHandlerOptions } from '@trpc/server/src/internals/BaseHandlerOptions';
 import { callProcedure } from '../internals/callProcedure';
 import { getErrorFromUnknown } from '../internals/errors';
 import { transformTRPCResponse } from '../internals/transformTRPCResponse';
-import { AnyRouter, ProcedureType, inferRouterContext } from '../router';
-import { TRPCErrorResponse, TRPCRequest, TRPCResponse } from '../rpc';
-import { Subscription } from '../subscription';
-import { CombinedDataTransformer } from '../transformer';
 
 interface MessageEvent<T = any> extends Event {
   /**
@@ -32,6 +40,14 @@ interface PostMessage {
   ): void;
 }
 
+function isJson(str: string) {
+  try {
+    JSON.parse(str);
+  } catch (e) {
+    return false;
+  }
+  return true;
+}
 /* istanbul ignore next */
 function assertIsObject(obj: unknown): asserts obj is Record<string, unknown> {
   if (typeof obj !== 'object' || Array.isArray(obj) || !obj) {
@@ -227,9 +243,12 @@ export async function applyPMSHandler<TRouter extends AnyRouter>(
       respond({ id, error: json });
     }
   }
-  pms.addEventListener('message', async (message) => {
+  pms.addEventListener('message', async ({ data }) => {
+    if (!isJson(data)) {
+      return;
+    }
     try {
-      const msgJSON: unknown = JSON.parse(message.toString());
+      const msgJSON: unknown = JSON.parse(data);
       const msgs: unknown[] = Array.isArray(msgJSON) ? msgJSON : [msgJSON];
       const promises = msgs
         .map((raw) => parseMessage(raw, transformer))

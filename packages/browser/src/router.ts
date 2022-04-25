@@ -1,30 +1,29 @@
 /* eslint-disable @typescript-eslint/ban-types */
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { TRPCError } from './TRPCError';
-import { assertNotBrowser } from './assertNotBrowser';
-import { MiddlewareFunction } from './internals/middlewares';
-import {
-  CreateProcedureOptions,
-  CreateProcedureWithInput,
-  CreateProcedureWithInputOutputParser,
-  CreateProcedureWithoutInput,
-  Procedure,
-  ProcedureCallOptions,
-  createProcedure,
-  inferProcedureFromOptions,
-} from './internals/procedure';
+import type { Subscription } from '@trpc/server';
+import { TRPCError } from '@trpc/server';
 import {
   TRPCErrorShape,
   TRPC_ERROR_CODES_BY_KEY,
   TRPC_ERROR_CODE_KEY,
   TRPC_ERROR_CODE_NUMBER,
-} from './rpc';
-import { Subscription } from './subscription';
-import { CombinedDataTransformer, DataTransformerOptions } from './transformer';
-import { Prefixer, ThenArg, flatten } from './types';
-
-assertNotBrowser();
+} from '@trpc/server/rpc';
+import { MiddlewareFunction } from '@trpc/server/src/internals/middlewares';
+import {
+  CreateProcedureOptions,
+  CreateProcedureWithInput,
+  CreateProcedureWithInputOutputParser,
+  CreateProcedureWithoutInput,
+  ProcedureCallOptions,
+  inferProcedureFromOptions,
+} from '@trpc/server/src/internals/procedure';
+import type {
+  CombinedDataTransformer,
+  DataTransformerOptions,
+} from '@trpc/server/src/transformer';
+import type { Prefixer, ThenArg, flatten } from '@trpc/server/src/types';
+import { Procedure, createProcedure } from './internals/procedure';
 
 /**
  * @public

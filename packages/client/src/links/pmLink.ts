@@ -28,6 +28,16 @@ export interface PostMessageClientOptions {
   targetOrigin: string;
   PostMessage?: PostMessage;
 }
+
+function isJson(str: string) {
+  try {
+    JSON.parse(str);
+  } catch (e) {
+    return false;
+  }
+  return true;
+}
+
 export function createPMClient(opts: PostMessageClientOptions) {
   const { targetOrigin, PostMessage: PostMessageImpl = window } = opts;
   /* istanbul ignore next */
@@ -140,6 +150,9 @@ export function createPMClient(opts: PostMessageClientOptions) {
       }
     };
     conn.addEventListener('message', ({ data }) => {
+      if (!isJson(data)) {
+        return;
+      }
       const msg = JSON.parse(data) as TRPCClientIncomingMessage;
 
       if ('method' in msg) {

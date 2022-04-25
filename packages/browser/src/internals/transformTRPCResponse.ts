@@ -1,5 +1,5 @@
-import { AnyRouter } from '../router';
-import { TRPCResponse } from '../rpc';
+import type { AnyRouter } from '@trpc/server';
+import type { TRPCResponse } from '@trpc/server/rpc';
 
 function transformTRPCResponseItem(
   router: AnyRouter,
