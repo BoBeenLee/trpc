@@ -1,8 +1,8 @@
 import React from 'react';
+import { trpc } from '../trpc';
 
-const Main = (props: any) => {
-  const { trpc } = props;
-  const hello = trpc.useQuery(['hello', { text: 'client' } as any]);
+const Main = () => {
+  const hello = trpc.useQuery(['hello', { name: 'client' } as any]);
   if (!hello.data) return <div>Loading...</div>;
   return (
     <div>

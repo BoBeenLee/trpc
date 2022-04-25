@@ -1,5 +1,4 @@
 import { createPMClient, pmLink } from '@trpc/client/links/pmLink';
-import { withTRPC } from '@trpc/next';
 import React from 'react';
 import { useState } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
@@ -8,13 +7,11 @@ import Main from './components/Main';
 import logo from './logo.svg';
 import { trpc } from './trpc';
 
-function App(props: any) {
-  return <Main {...props} />;
-}
-
-export default withTRPC<any>({
-  config() {
-    return {
+function App() {
+  const [queryClient] = useState(() => new QueryClient());
+  const [trpcClient] = useState(() =>
+    trpc.createClient({
+      url: '',
       links: [
         pmLink({
           client: createPMClient({
@@ -23,6 +20,16 @@ export default withTRPC<any>({
           }),
         }),
       ],
-    };
-  },
-})(App);
+    }),
+  );
+
+  return (
+    <trpc.Provider client={trpcClient} queryClient={queryClient}>
+      <QueryClientProvider client={queryClient}>
+        <Main />
+      </QueryClientProvider>
+    </trpc.Provider>
+  );
+}
+
+export default App;
