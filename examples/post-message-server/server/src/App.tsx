@@ -53,11 +53,15 @@ export type AppRouter = typeof appRouter;
 
 function App() {
   useEffect(() => {
-    applyPMSHandler<AppRouter>({
-      targetOrigin: '*',
-      pms: window,
-      router: appRouter,
-    });
+    async function handlePostMessage() {
+      const { open, close } = await applyPMSHandler<AppRouter>({
+        targetOrigin: '*',
+        pms: window,
+        router: appRouter,
+      });
+      open();
+    }
+    handlePostMessage();
   }, []);
 
   return (

@@ -24,11 +24,14 @@ function App() {
   );
 
   return (
-    <trpc.Provider client={trpcClient} queryClient={queryClient}>
-      <QueryClientProvider client={queryClient}>
-        <Main />
-      </QueryClientProvider>
-    </trpc.Provider>
+    <React.Fragment>
+      <trpc.Provider client={trpcClient} queryClient={queryClient}>
+        <QueryClientProvider client={queryClient}>
+          <Main />
+        </QueryClientProvider>
+      </trpc.Provider>
+      <iframe src={'https://localhost:3000'} />
+    </React.Fragment>
   );
 }
 
