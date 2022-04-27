@@ -1,16 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { TRPCError } from '@trpc/server';
-import {
-  MiddlewareFunction,
-  middlewareMarker,
-} from '@trpc/server/src/internals/middlewares';
-import {
+import type {
   CreateProcedureOptions,
   ProcedureCallOptions,
   ProcedureParser,
   ProcedureResolver,
 } from '@trpc/server/src/internals/procedure';
 import { getErrorFromUnknown } from './errors';
+import { MiddlewareFunction, middlewareMarker } from './middlewares';
 import { wrapCallSafe } from './wrapCallSafe';
 
 interface ProcedureOptions<TContext, TMeta, TInput, TOutput, TParsedOutput> {

@@ -7,6 +7,7 @@ import {
   inferRouterContext,
 } from '@trpc/server';
 import type {
+  TRPCClientIncomingRequest,
   TRPCErrorResponse,
   TRPCRequest,
   TRPCResponse,
@@ -273,11 +274,28 @@ export async function applyPMSHandler<TRouter extends AnyRouter>(
     }
   });
 
+  const requestClientIncoming = (method: 'open' | 'close') => {
+    const response: TRPCClientIncomingRequest = {
+      id: null,
+      method: method as any,
+    };
+    const data = JSON.stringify(response);
+    pms.postMessage(data, targetOrigin);
+  };
+
+  const open = () => {
+    requestClientIncoming('open');
+  };
+
   const close = () => {
     for (const sub of clientSubscriptions.values()) {
       sub.destroy();
     }
     clientSubscriptions.clear();
+    requestClientIncoming('close');
   };
-  return { close };
+  return {
+    close,
+    open,
+  };
 }

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-types */
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { Subscription } from '@trpc/server';
+import { Subscription } from '@trpc/server';
 import { TRPCError } from '@trpc/server';
 import {
   TRPCErrorShape,
@@ -9,8 +9,7 @@ import {
   TRPC_ERROR_CODE_KEY,
   TRPC_ERROR_CODE_NUMBER,
 } from '@trpc/server/rpc';
-import { MiddlewareFunction } from '@trpc/server/src/internals/middlewares';
-import {
+import type {
   CreateProcedureOptions,
   CreateProcedureWithInput,
   CreateProcedureWithInputOutputParser,
@@ -23,6 +22,7 @@ import type {
   DataTransformerOptions,
 } from '@trpc/server/src/transformer';
 import type { Prefixer, ThenArg, flatten } from '@trpc/server/src/types';
+import type { MiddlewareFunction } from './internals/middlewares';
 import { Procedure, createProcedure } from './internals/procedure';
 
 /**
