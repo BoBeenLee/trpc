@@ -1,0 +1,47 @@
+{
+  "name": "@trpc/browser",
+  "version": "9.22.0",
+  "description": "tRPC Browser",
+  "author": "KATT",
+  "license": "MIT",
+  "homepage": "https://trpc.io",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/trpc/trpc.git",
+    "directory": "packages/browser"
+  },
+  "eslintConfig": {
+    "rules": {
+      "explicit-module-boundary-types": "off"
+    }
+  },
+  "preconstruct": {
+    "entrypoints": [
+      "index.ts",
+      "adapters/pm.ts"
+    ]
+  },
+  "scripts": {
+    "test": "jest"
+  },
+  "main": "dist/trpc-browser.cjs.js",
+  "module": "dist/trpc-browser.esm.js",
+  "typings": "dist/trpc-browser.cjs.d.ts",
+  "files": [
+    "README.md",
+    "dist",
+    "adapters",
+    "ws",
+    "rpc",
+    "src"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "peerDependencies": {
+    "@trpc/server": "^9.12.0"
+  },
+  "devDependencies": {
+    "@trpc/server": "^9.22.0"
+  }
+}
